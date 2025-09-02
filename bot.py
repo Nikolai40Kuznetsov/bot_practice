@@ -1,10 +1,10 @@
 from aiogram import Bot, types
-from aiogram.dispatcher import Dispatcher
+from aiogram.dispatcher import dispatcher
 import id
 
 TOKEN = id.name
 bot = Bot(TOKEN)
-dp = Dispatcher(bot)
+dp = dispatcher(bot)
 
 @dp.message_handler(commands = ['start', 'help'])
 async def send_welcome(msg: types.Message):
