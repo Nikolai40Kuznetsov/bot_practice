@@ -10,7 +10,8 @@ def send_welcome(message):
     keyboard_markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     info = types.KeyboardButton("Инфо")
     stat = types.KeyboardButton("Статистика")
-    keyboard_markup.add(info, stat)
+    video = types.KeyboardButton("Видео")
+    keyboard_markup.add(info, stat, video)
     bot.send_message(message, "Привет! Я простой бот на telebot")
 
 @bot.message_handler(func=lambda message:True)
@@ -22,6 +23,11 @@ def echo_all(message):
         # bot.send_sticker(message, ':love:')
     else:
         bot.send_message(message, f"Ты написал {message.text}")
+        
+@bot.message_handler(func=lambda message:True)
+def send_video(message):
+    if message.text == "Видео":
+        bot.send_message(message, "@vid https://www.youtube.com/watch?v=m9wkjtT-j6o&pp=ygUJcmFpbmJsb29k")
         
 def main():
     try:
