@@ -1,6 +1,8 @@
 import telebot
 from telebot import types
 from id import name
+import requests
+import pandas as pd
 
 TOKEN = name
 bot = telebot.TeleBot(TOKEN)
@@ -28,6 +30,16 @@ def echo_all(message):
 def send_video(message):
     if message.text == "Видео":
         bot.send_message(message, "@vid https://www.youtube.com/watch?v=m9wkjtT-j6o&pp=ygUJcmFpbmJsb29k")
+        url = f"https://wttr.in/Minsk?format=j1"
+        r = requests.get(url).json()
+        forecast = {"Date": [], "Temp": [], "Weather": []}
+        df = pd.DataFrame(forecast)
+        for day in r["weather"]:
+            date = day["date"]
+            avgtemp = day["avgtempC"]
+            desc = day["hourly"][4]["weatherDesc"][0]["value"]
+            df.loc[len(df)] = [date, f"{avgtemp}*C", desc]
+            bot.send_message(message, df)
         
 def main():
     try:
