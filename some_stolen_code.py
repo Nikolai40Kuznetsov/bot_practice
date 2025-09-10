@@ -3,8 +3,9 @@ import telebot
 from telebot.types import ReplyKeyboardMarkup
 from datetime import datetime
 import random
+from id import name
 
-BOT_TOKEN = "TOKEN"
+BOT_TOKEN = name
 
 bot = telebot.TeleBot(BOT_TOKEN)
 

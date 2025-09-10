@@ -53,8 +53,5 @@ def main():
     except:
         print("Бот не запустился")
         
-
 if __name__ == "__main__":
     main()
-    
-
