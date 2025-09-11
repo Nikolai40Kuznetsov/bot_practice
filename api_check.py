@@ -8,5 +8,5 @@ for day in r["weather"]:
     date = day["date"]
     avgtemp = day["avgtempC"]
     desc = day["hourly"][4]["weatherDesc"][0]["value"]
-    df.loc[len(df)] = [date, f"{avgtemp}*C", desc]
+    df.loc[len(df)] = [date, f"{avgtemp}°C", desc]
 print(df)
