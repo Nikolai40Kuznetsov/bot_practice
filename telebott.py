@@ -1,30 +1,33 @@
 import telebot
 from telebot import types
 from id import name
-import threading
-import time
-import schedule
-
-# 5739163615 мой id 
+import requests
+import pandas as pd
+import logging
 
 TOKEN = name
 bot = telebot.TeleBot(TOKEN)
 tg_id = 5739163615
 
-@bot.message_handler(func=lambda message: True)
-def send_message(message):
-    bot.send_message(message.chat.id, 'Будь здоров, воин')
-    schedule.every().day.at("10:05").do(send_message)
-    schedule.every().day.at("18:50").do(send_message)
-    schedule.every().day.at("22:20").do(send_message)            
-         
-    
-@bot.message_handler(commands=["start"])
+def tell_weather(message):
+    url = f"https://wttr.in/Minsk?format=j1"
+    r = requests.get(url).json()
+    forecast = {"Date": [], "Temp": [], "Weather": []}
+    df = pd.DataFrame(forecast)
+    for day in r["weather"]:
+        date = day["date"]
+        avgtemp = day["avgtempC"]
+        desc = day["hourly"][4]["weatherDesc"][0]["value"]
+        df.loc[len(df)] = [date, f"{avgtemp}*C", desc]
+        bot.send_message(message, df)
+
+@bot.message_handler(Commands = ["start"])
 def send_welcome(message):
     keyboard_markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     info = types.KeyboardButton("Инфо")
     stat = types.KeyboardButton("Статистика")
     video = types.KeyboardButton("Видео")
+    weather = types.KeyboardButton("Погода")
     keyboard_markup.add(info, stat, video)
     bot.send_message(message.chat.id, "Привет! Я простой бот на telebot", reply_markup=keyboard_markup)
 
@@ -33,12 +36,17 @@ def echo_all(message):
     if message.text == "Инфо":
         bot.send_message(message.chat.id, "Ты нажал кнопку 'Инфо'")
     elif message.text == "Статистика":
-        bot.send_message(message.chat.id, "Ты нажал кнопку 'Статистика'")
-        # bot.send_sticker(message.chat.id, 'STICKER_ID')  
-    elif message.text == "Видео":
-        bot.send_message(message.chat.id, "https://www.youtube.com/watch?v=m9wkjtT-j6o&pp=ygUJcmFpbmJsb29k")
+        bot.send_message(message, f"Ты нажал кнопку 'Статистика'")
+    elif message.text == "Погода":
+        tell_weather()
+        # bot.send_sticker(message, ':love:')
     else:
-        bot.send_message(message.chat.id, f"Ты написал: {message.text}")
+        bot.send_message(message, f"Ты написал {message.text}")
+        
+@bot.message_handler(func=lambda message:True)
+def send_video(message):
+    if message.text == "Видео":
+        bot.send_message(message, "@vid https://www.youtube.com/watch?v=m9wkjtT-j6o&pp=ygUJcmFpbmJsb29k")
 
 def main():
     try:
@@ -47,6 +55,5 @@ def main():
     except Exception as e:
         print(f"Бот не запустился: {e}")
         
-
 if __name__ == "__main__":
     main()
