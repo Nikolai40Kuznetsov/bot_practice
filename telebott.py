@@ -41,35 +41,36 @@ def rewards_info(message):
     man = random.choice(awards)
     bot.send_message(message, man)        
     
-
-@bot.message_handler(Commands = ["start"])
-def send_welcome(message):
-    keyboard_markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    info = types.KeyboardButton("Инфо")
-    video = types.KeyboardButton("Видео")
-    weather = types.KeyboardButton("Погода")
-    country = types.KeyboardButton("Информация о случайной стране")
-    hero = types.KeyboardButton("Случайный награждённый солдат")
-    keyboard_markup.add(info, video, weather)
-    keyboard_markup.add(country)
-    keyboard_markup.add(hero)
-    bot.send_message(message, "Привет! Я простой бот на telebot")
-
-@bot.message_handler(func=lambda message:True)
-def echo_all(message):
-    if message.text == "Инфо":
-        bot.send_message(message, f"Ты нажал кнопку 'Инфо'")
+@bot.message_handler(content_types=['text'])
+def handle_message(message):
+    if message.text == "Старт":
+        keyboard_markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        info = types.KeyboardButton("Инфо")
+        video = types.KeyboardButton("Видео")
+        weather = types.KeyboardButton("Погода")
+        country = types.KeyboardButton("Информация о случайной стране")
+        hero = types.KeyboardButton("Случайный награждённый солдат")
+        keyboard_markup.add(info, video, weather)    
+        keyboard_markup.add(country)
+        keyboard_markup.add(hero)    
+        bot.send_message(message.chat.id, "Привет! Я простой бот на telebot", reply_markup=keyboard_markup)    
+    elif message.text == "Инфо":
+        bot.send_message(message.chat.id, "Ты нажал кнопку 'Инфо'")    
     elif message.text == "Погода":
-        tell_weather()
+        tell_weather(message.chat.id)   
     elif message.text == "Информация о случайной стране":
         get_random_country()
     elif message.text == "Случайный награждённый солдат":
         rewards_info()
-        # bot.send_sticker(message, ':love:')
+        # bot.send_sticker(message, ':love:') 
     elif message.text == "Видео":
-        bot.send_message(message, "@vid https://www.youtube.com/watch?v=m9wkjtT-j6o&pp=ygUJcmFpbmJsb29k")
+        bot.send_message(message.chat.id, "https://www.youtube.com/watch?v=m9wkjtT-j6o")    
     else:
-        bot.send_message(message, f"Ты написал {message.text}")    
+        bot.send_message(message.chat.id, f"Вы написали \"{message.text}\", я не знаю такой команды")
+        start_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        start_button = types.KeyboardButton("Старт")
+        start_keyboard.add(start_button)
+        bot.send_message(message.chat.id, "Нажмите кнопку 'Старт' чтобы начать", reply_markup=start_keyboard)   
 
 def main():
     try:
@@ -80,35 +81,3 @@ def main():
         
 if __name__ == "__main__":
     main()
-    
-    
-    
-    
-    @bot.message_handler(content_types=['text'])
-def handle_message(message):
-    if message.text == "Старт":
-        keyboard_markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        info = types.KeyboardButton("Инфо")
-        video = types.KeyboardButton("Видео")
-        weather = types.KeyboardButton("Погода")
-        keyboard_markup.add(info, video, weather)        
-        bot.send_message(message.chat.id, "Привет! Я простой бот на telebot", reply_markup=keyboard_markup)
-    
-    elif message.text == "Инфо":
-        bot.send_message(message.chat.id, "Ты нажал кнопку 'Инфо'")
-    
-    elif message.text == "Погода":
-        tell_weather(message.chat.id)
-    
-    elif message.text == "Видео":
-        bot.send_message(message.chat.id, "https://www.youtube.com/watch?v=m9wkjtT-j6o")
-    
-    else:
-        # Ответ на любое другое текстовое сообщение
-        bot.send_message(message.chat.id, f"Вы написали \"{message.text}\", я не знаю такой команды")
-        
-        # Показываем кнопку Старт
-        start_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        start_button = types.KeyboardButton("Старт")
-        start_keyboard.add(start_button)
-        bot.send_message(message.chat.id, "Нажмите кнопку 'Старт' чтобы начать", reply_markup=start_keyboard)
