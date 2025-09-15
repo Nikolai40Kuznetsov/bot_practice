@@ -69,7 +69,6 @@ def log_user_action(chat_id, motion_text, api_name="NONE", api_response="NONE"):
     }
     
     write_log_to_file(log_entry)
-    print(f"Лог #{call_id} записан: {motion_text}")
 
 def log_api_call(func):
     def wrapper(chat_id, *args, **kwargs):
