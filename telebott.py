@@ -5,7 +5,7 @@ import requests
 import pandas as pd
 import random
 
-TOKEN = "8399404565:AAGOfc24WwMXLsc4gmn4Co7m68zCBWb6UP0"
+TOKEN = name
 bot = telebot.TeleBot(TOKEN)
 
 def tell_weather(message):
