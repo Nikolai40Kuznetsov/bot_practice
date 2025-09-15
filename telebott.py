@@ -9,7 +9,7 @@ TOKEN = name
 bot = telebot.TeleBot(TOKEN)
 
 def tell_weather(message):
-    url = f"https://wttr.in/Minsk?format=j1"
+    url = "https://wttr.in/Minsk?format=j1"
     r = requests.get(url).json()
     forecast = {"Date": [], "Temp": [], "Weather": []}
     df = pd.DataFrame(forecast)
@@ -20,8 +20,8 @@ def tell_weather(message):
         df.loc[len(df)] = [date, f"{avgtemp}*C", desc]
         bot.send_message(message, df)
 
-def get_random_country():
-    response = f"https://restcountries.com/v3.1/all"
+def get_random_country(message):
+    response = "https://restcountries.com/v3.1/all"
     countries = requests.get(response).json()     
     country = random.choice(countries)        
     result = "Случайная страна:\n\n"
@@ -33,7 +33,14 @@ def get_random_country():
     if country.get('languages'):
         languages = list(country['languages'].values())
         result += f"Языки: {', '.join(languages[:3])}\n"
-    return result
+    bot.send_message(message, result)
+
+def rewards_info(message):
+    site = f"https://poisk.re/awards"
+    awards = requests.get(site).json()
+    man = random.choice(awards)
+    bot.send_message(message, man)        
+    
 
 @bot.message_handler(Commands = ["start"])
 def send_welcome(message):
@@ -42,8 +49,10 @@ def send_welcome(message):
     video = types.KeyboardButton("Видео")
     weather = types.KeyboardButton("Погода")
     country = types.KeyboardButton("Информация о случайной стране")
+    hero = types.KeyboardButton("Случайный награждённый солдат")
     keyboard_markup.add(info, video, weather)
     keyboard_markup.add(country)
+    keyboard_markup.add(hero)
     bot.send_message(message, "Привет! Я простой бот на telebot")
 
 @bot.message_handler(func=lambda message:True)
@@ -54,6 +63,8 @@ def echo_all(message):
         tell_weather()
     elif message.text == "Информация о случайной стране":
         get_random_country()
+    elif message.text == "Случайный награждённый солдат":
+        rewards_info()
         # bot.send_sticker(message, ':love:')
     elif message.text == "Видео":
         bot.send_message(message, "@vid https://www.youtube.com/watch?v=m9wkjtT-j6o&pp=ygUJcmFpbmJsb29k")
