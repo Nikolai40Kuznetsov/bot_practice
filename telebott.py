@@ -80,3 +80,35 @@ def main():
         
 if __name__ == "__main__":
     main()
+    
+    
+    
+    
+    @bot.message_handler(content_types=['text'])
+def handle_message(message):
+    if message.text == "Старт":
+        keyboard_markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        info = types.KeyboardButton("Инфо")
+        video = types.KeyboardButton("Видео")
+        weather = types.KeyboardButton("Погода")
+        keyboard_markup.add(info, video, weather)        
+        bot.send_message(message.chat.id, "Привет! Я простой бот на telebot", reply_markup=keyboard_markup)
+    
+    elif message.text == "Инфо":
+        bot.send_message(message.chat.id, "Ты нажал кнопку 'Инфо'")
+    
+    elif message.text == "Погода":
+        tell_weather(message.chat.id)
+    
+    elif message.text == "Видео":
+        bot.send_message(message.chat.id, "https://www.youtube.com/watch?v=m9wkjtT-j6o")
+    
+    else:
+        # Ответ на любое другое текстовое сообщение
+        bot.send_message(message.chat.id, f"Вы написали \"{message.text}\", я не знаю такой команды")
+        
+        # Показываем кнопку Старт
+        start_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        start_button = types.KeyboardButton("Старт")
+        start_keyboard.add(start_button)
+        bot.send_message(message.chat.id, "Нажмите кнопку 'Старт' чтобы начать", reply_markup=start_keyboard)
