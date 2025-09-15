@@ -1,6 +1,6 @@
 import telebot
 from telebot import types
-from id import name
+# from id import name
 import requests
 import pandas as pd
 import random
