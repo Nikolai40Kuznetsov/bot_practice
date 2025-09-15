@@ -5,7 +5,7 @@ import requests
 import pandas as pd
 import random
 
-TOKEN = name
+TOKEN = data
 bot = telebot.TeleBot(TOKEN)
 
 def tell_weather(message):
@@ -59,9 +59,9 @@ def handle_message(message):
     elif message.text == "Погода":
         tell_weather(message.chat.id)   
     elif message.text == "Информация о случайной стране":
-        get_random_country()
+        get_random_country(message.chat.id)
     elif message.text == "Случайный награждённый солдат":
-        rewards_info()
+        rewards_info(message.chat.id)
         # bot.send_sticker(message, ':love:') 
     elif message.text == "Видео":
         bot.send_message(message.chat.id, "https://www.youtube.com/watch?v=m9wkjtT-j6o")    
