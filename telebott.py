@@ -55,13 +55,10 @@ def echo_all(message):
     elif message.text == "Информация о случайной стране":
         get_random_country()
         # bot.send_sticker(message, ':love:')
-    else:
-        bot.send_message(message, f"Ты написал {message.text}")
-        
-@bot.message_handler(func=lambda message:True)
-def send_video(message):
-    if message.text == "Видео":
+    elif message.text == "Видео":
         bot.send_message(message, "@vid https://www.youtube.com/watch?v=m9wkjtT-j6o&pp=ygUJcmFpbmJsb29k")
+    else:
+        bot.send_message(message, f"Ты написал {message.text}")    
 
 def main():
     try:
